@@ -9,7 +9,13 @@ module.exports = (request, response) => {
   //Regex expression that matches anything that is not a character letter of numeric, and replace with string
   const phone = String(request.body.phone).replace(/[^\d]/g, "");
 
+  //Verify that phone number is 10 digit length
+  if (phone.length < 10 || phone.length > 10) {
+    return response.status(422).send({ error: 'Phone not valid length'});
+  };
   //Create a new user account using the phone number
+  admin.auth().createUser({ uid: phone })
+    .then(user => response.send(user))
+    .catch(error => response.status(422).send({ error }));
   //Respond to user request saying the account was made
-  response.send(request.body);
 };
