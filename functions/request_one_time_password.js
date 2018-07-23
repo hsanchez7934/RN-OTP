@@ -1,3 +1,4 @@
+/* eslint-disable */
 const admin = require('firebase-admin');
 const twilio = require('./twilio');
 
@@ -12,19 +13,19 @@ module.exports = (request, response) => {
     .then(userRecord => {
       const code = Math.floor(Math.random() * 8999 + 1000);
 
-      throw twilio.messages.create({
-        body: `Your code is ${code}`,
+      twilio.messages.create({
+        body: 'Your code is ' + code,
         to: phone,
-        from: `+17206051897`
+        from: '+17206051897'
       }, (error) => {
         if (error) {
           return response.status(422).send(error)
         }
         admin.database().ref('users/' + phone)
-          .update({ code, codeValid: true }, () => {
+          .update({ code: code, codeValid: true }, () => {
             response.status({ success: true });
           })
       })
     })
-    .catch(error => console.log(error))
+    .catch(error => response.status(422).send(error))
 };
