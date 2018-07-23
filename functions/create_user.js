@@ -12,7 +12,7 @@ module.exports = (request, response) => {
   //Verify that phone number is 10 digit length
   if (phone.length < 10 || phone.length > 10) {
     return response.status(422).send({ error: 'Phone not valid length'});
-  };
+  }
   //Create a new user account using the phone number
   admin.auth().createUser({ uid: phone })
     .then(user => response.send(user))
